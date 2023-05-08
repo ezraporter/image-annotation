@@ -1,5 +1,9 @@
 import cv2
 from collections import deque
+import math
+
+FONT_SCALE = 1e-3
+THICKNESS_SCALE = 2e-3
 
 def main():
     clicks = []
@@ -77,20 +81,24 @@ def main():
             f.write(f"{click[0]},{click[1]},{click[2]}\n")
 
 def put_circle(img, x, y):
+    height, width, *_ = img.shape
+    
     cv2.circle(img,
                (x, y),
                radius=5,
                color=(0, 0, 255),
-               thickness=-1)
+               thickness=-math.ceil(min(width, height) * THICKNESS_SCALE))
 
 def put_text(img, text, x, y):
+    height, width, *_ = img.shape
+
     cv2.putText(img,
                 text,
                 (x + 10, y),
                 fontFace=cv2.FONT_HERSHEY_SIMPLEX,
-                fontScale=1.5,
+                fontScale=min(width, height) * FONT_SCALE,
                 color=(0, 0, 255),
-                thickness=3)
+                thickness=math.ceil(min(width, height) * THICKNESS_SCALE))
     
 class ResetHandlingClickOnExit:
     def __init__(self):
